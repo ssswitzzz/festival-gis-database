@@ -1,0 +1,13 @@
+{
+  "festival": "Tomorrowland",
+  "edition_year": 2025,
+  "label": "official_lineup",
+  "url": "https://www.tomorrowland.com/en/festival/line-up",
+  "final_url": "https://belgium.tomorrowland.com/en/line-up/",
+  "status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "elapsed_seconds": 3.73,
+  "saved_html": "C:\\Users\\12907\\Desktop\\2025-2026大三下学期\\数据库原理及应用\\数据库期末作业\\data\\raw\\festival_business_pages\\Tomorrowland_2025_official_lineup_6f0456f34a8d1aed.html",
+  "content_hash": "6f0456f34a8d1aed",
+  "scraped_at": "2026-06-21T06:00:47+00:00"
+}

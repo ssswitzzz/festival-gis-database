@@ -1,0 +1,8 @@
+﻿Eurostat/GISCO population grid source:
+https://ec.europa.eu/eurostat/web/gisco/geodata/population-distribution/population-grids
+
+Recommended dataset:
+GEOSTAT / Census grid 2021, 1 km or 5 km grid.
+
+Download manually if the direct ZIP endpoint changes, then place it in:
+data/raw/eurostat_population_grid.zip

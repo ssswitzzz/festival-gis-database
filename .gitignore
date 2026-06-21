@@ -1,0 +1,33 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local environment and credentials
+.env
+.env.*
+*.local
+
+# Large downloaded source archives / expanded public datasets
+data/raw/*.zip
+data/raw/Eurostat_Census-GRID_2021_V3/
+data/raw/airports.csv
+data/raw/natura2000_be_nl.geojson
+
+# Large generated SQL staging dumps
+data/processed/stg_*.sql
+data/processed/stg_*.clean.sql
+
+# Browser/network capture cache can be regenerated from documented sources
+data/raw/festival_network_capture/
+
+# Database / GIS local project files
+*.dump
+*.backup
+*.qgz
+*.qgs

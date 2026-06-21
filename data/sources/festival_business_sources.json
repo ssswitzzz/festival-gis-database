@@ -1,0 +1,70 @@
+{
+  "festivals": [
+    {
+      "festival": "Tomorrowland",
+      "edition_year": 2025,
+      "official_website": "https://www.tomorrowland.com/",
+      "urls": [
+        {
+          "label": "official_home",
+          "url": "https://www.tomorrowland.com/en/festival/welcome",
+          "expected_facts": ["dates", "attendance", "lineup"]
+        },
+        {
+          "label": "official_tickets",
+          "url": "https://www.tomorrowland.com/en/festival/tickets",
+          "expected_facts": ["ticket_prices"]
+        },
+        {
+          "label": "official_lineup",
+          "url": "https://www.tomorrowland.com/en/festival/line-up",
+          "expected_facts": ["lineup", "timetable"]
+        }
+      ]
+    },
+    {
+      "festival": "Defqon.1",
+      "edition_year": 2025,
+      "official_website": "https://www.q-dance.com/",
+      "urls": [
+        {
+          "label": "official_home",
+          "url": "https://www.q-dance.com/l/defqon-1",
+          "expected_facts": ["dates", "attendance", "lineup"]
+        },
+        {
+          "label": "official_tickets",
+          "url": "https://www.q-dance.com/l/defqon-1/tickets",
+          "expected_facts": ["ticket_prices"]
+        },
+        {
+          "label": "official_lineup",
+          "url": "https://www.q-dance.com/l/defqon-1/line-up",
+          "expected_facts": ["lineup", "timetable"]
+        }
+      ]
+    },
+    {
+      "festival": "Awakenings Summer Festival",
+      "edition_year": 2025,
+      "official_website": "https://www.awakenings.com/",
+      "urls": [
+        {
+          "label": "official_home",
+          "url": "https://www.awakenings.com/en/festivals/awakenings-summer-festival/",
+          "expected_facts": ["dates", "attendance", "lineup"]
+        },
+        {
+          "label": "official_tickets",
+          "url": "https://www.awakenings.com/en/festivals/awakenings-summer-festival/tickets/",
+          "expected_facts": ["ticket_prices"]
+        },
+        {
+          "label": "official_lineup",
+          "url": "https://www.awakenings.com/en/festivals/awakenings-summer-festival/line-up/",
+          "expected_facts": ["lineup", "timetable"]
+        }
+      ]
+    }
+  ]
+}

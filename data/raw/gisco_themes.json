@@ -1,0 +1,58 @@
+{
+    "coas": {
+        "title": "Coastal lines",
+        "titleMultilinual": {
+            "de": "Küstenlinien",
+            "en": "Coastal lines",
+            "fr": "Lignes de côte"
+        }
+    },
+    "communes": {
+        "title": "Communes",
+        "titleMultilinual": {
+            "de": "Gemeinden",
+            "en": "Communes",
+            "fr": "Communes"
+        }
+    },
+    "countries": {
+        "title": "Countries",
+        "titleMultilinual": {
+            "de": "Staaten",
+            "en": "Countries",
+            "fr": "Pays"
+        }
+    },
+    "lau": {
+        "title": "Local Administrative Units",
+        "titleMultilinual": {
+            "de": "Local Administrative Units",
+            "en": "Local Administrative Units",
+            "fr": "Local Administrative Units"
+        }
+    },
+    "nuts": {
+        "title": "NUTS",
+        "titleMultilinual": {
+            "de": "NUTS",
+            "en": "NUTS",
+            "fr": "NUTS"
+        }
+    },
+    "pcode": {
+        "title": "Postal codes",
+        "titleMultilinual": {
+            "de": "Postal codes",
+            "en": "Postal codes",
+            "fr": "Postal codes"
+        }
+    },
+    "urau": {
+        "title": "Urban Audit",
+        "titleMultilinual": {
+            "de": "Städte-Audit",
+            "en": "Urban Audit",
+            "fr": "Audit Urbain"
+        }
+    }
+}
