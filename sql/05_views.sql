@@ -192,3 +192,123 @@ SELECT
     *,
     ROUND((0.30 * airport_score + 0.25 * population_score + 0.20 * ecology_safety_score + 0.25 * noise_safety_score)::numeric, 2) AS total_score
 FROM scored;
+
+CREATE OR REPLACE VIEW v_site_score_explanation AS
+WITH metrics AS (
+    SELECT
+        s.site_id,
+        s.name,
+        s.terrain_type,
+        s.area_sqm,
+        s.data_source,
+        s.is_manual_sample,
+        airport.nearest_airport_name,
+        airport.nearest_airport_city,
+        airport.nearest_airport_country,
+        COALESCE(airport.nearest_airport_m, 1000000) AS nearest_airport_m,
+        COALESCE(airport.airport_count_80km, 0) AS airport_count_80km,
+        COALESCE(pop.raw_population_25km, 0) AS raw_population_25km,
+        COALESCE(pop.weighted_population_25km, 0) AS weighted_population_25km,
+        COALESCE(pop.population_grid_count_25km, 0) AS population_grid_count_25km,
+        ecology.nearest_ecology_name,
+        ecology.nearest_ecology_type,
+        COALESCE(ecology.nearest_ecology_m, 1000000) AS nearest_ecology_m,
+        COALESCE(ecology.intersects_protected_area, false) AS intersects_protected_area,
+        sensitive.nearest_sensitive_name,
+        sensitive.nearest_sensitive_type,
+        sensitive.nearest_sensitive_level,
+        COALESCE(sensitive.nearest_sensitive_m, 1000000) AS nearest_sensitive_m,
+        COALESCE(sensitive.high_sensitive_count_3km, 0) AS high_sensitive_count_3km,
+        COALESCE(sensitive.high_sensitive_count_5km, 0) AS high_sensitive_count_5km,
+        s.geom_polygon
+    FROM candidate_sites s
+    LEFT JOIN LATERAL (
+        SELECT
+            h.name AS nearest_airport_name,
+            h.city AS nearest_airport_city,
+            h.country AS nearest_airport_country,
+            ST_Distance(s.geom_polygon, h.geom_point) AS nearest_airport_m,
+            COUNT(*) FILTER (WHERE ST_DWithin(s.geom_polygon, h.geom_point, 80000)) OVER () AS airport_count_80km
+        FROM transport_hubs h
+        WHERE h.hub_type = 'airport'
+        ORDER BY s.geom_polygon <-> h.geom_point
+        LIMIT 1
+    ) airport ON true
+    LEFT JOIN LATERAL (
+        SELECT
+            SUM(g.population) AS raw_population_25km,
+            SUM(g.population * g.edm_fan_index) AS weighted_population_25km,
+            COUNT(*) AS population_grid_count_25km
+        FROM population_grids g
+        WHERE g.geom_polygon && ST_Expand(s.geom_polygon, 25000)
+          AND ST_DWithin(s.geom_polygon, g.geom_polygon, 25000)
+    ) pop ON true
+    LEFT JOIN LATERAL (
+        SELECT
+            e.name AS nearest_ecology_name,
+            e.protect_type AS nearest_ecology_type,
+            ST_Distance(s.geom_polygon, e.geom_polygon) AS nearest_ecology_m,
+            EXISTS (
+                SELECT 1
+                FROM ecological_protected_areas ix
+                WHERE ix.geom_polygon && s.geom_polygon
+                  AND ST_Intersects(s.geom_polygon, ix.geom_polygon)
+            ) AS intersects_protected_area
+        FROM ecological_protected_areas e
+        ORDER BY s.geom_polygon <-> e.geom_polygon
+        LIMIT 1
+    ) ecology ON true
+    LEFT JOIN LATERAL (
+        SELECT
+            n.name AS nearest_sensitive_name,
+            n.facility_type AS nearest_sensitive_type,
+            n.sensitivity_level AS nearest_sensitive_level,
+            ST_Distance(s.geom_polygon, n.geom_point) AS nearest_sensitive_m,
+            COUNT(*) FILTER (WHERE ST_DWithin(s.geom_polygon, n.geom_point, 3000)) OVER () AS high_sensitive_count_3km,
+            COUNT(*) FILTER (WHERE ST_DWithin(s.geom_polygon, n.geom_point, 5000)) OVER () AS high_sensitive_count_5km
+        FROM noise_sensitive_facilities n
+        WHERE n.sensitivity_level >= 4
+        ORDER BY s.geom_polygon <-> n.geom_point
+        LIMIT 1
+    ) sensitive ON true
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY ev.total_score DESC, m.site_id) AS score_rank,
+    m.site_id,
+    m.name,
+    m.terrain_type,
+    m.area_sqm,
+    m.is_manual_sample,
+    ev.evaluated_at,
+    ev.airport_score,
+    ev.population_score,
+    ev.ecology_safety_score,
+    ev.noise_safety_score,
+    ev.total_score,
+    m.nearest_airport_name,
+    m.nearest_airport_city,
+    m.nearest_airport_country,
+    ROUND(m.nearest_airport_m)::integer AS nearest_airport_m,
+    ROUND((m.nearest_airport_m / 1000.0)::numeric, 2) AS nearest_airport_km,
+    m.airport_count_80km,
+    ROUND(m.raw_population_25km)::integer AS raw_population_25km,
+    ROUND(m.weighted_population_25km)::integer AS weighted_population_25km,
+    m.population_grid_count_25km,
+    m.nearest_ecology_name,
+    m.nearest_ecology_type,
+    ROUND(m.nearest_ecology_m)::integer AS nearest_ecology_m,
+    ROUND((m.nearest_ecology_m / 1000.0)::numeric, 2) AS nearest_ecology_km,
+    m.intersects_protected_area,
+    m.nearest_sensitive_name,
+    m.nearest_sensitive_type,
+    m.nearest_sensitive_level,
+    ROUND(m.nearest_sensitive_m)::integer AS nearest_sensitive_m,
+    ROUND((m.nearest_sensitive_m / 1000.0)::numeric, 2) AS nearest_sensitive_km,
+    m.high_sensitive_count_3km,
+    m.high_sensitive_count_5km,
+    ev.method_note,
+    m.data_source,
+    m.geom_polygon
+FROM metrics m
+JOIN site_evaluations ev
+  ON ev.site_id = m.site_id;

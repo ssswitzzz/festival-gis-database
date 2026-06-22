@@ -82,6 +82,6 @@
 
 ## 下一步建议
 
-1. 增加 `v_site_score_explanation`，把每个候选地的原始距离、人口覆盖、敏感设施风险展示出来。
-2. 导出新的候选地评分 CSV，用于报告和 QGIS 制图。
-3. 用 OSM 边界替换 `venues.geom_polygon` 的近似矩形，优先处理 De Schorre。
+1. 已在 2026-06-22 增加 `v_site_score_explanation`，把每个候选地的原始距离、人口覆盖、敏感设施风险展示出来。
+2. 已导出新的候选地评分解释 CSV 和动态评分 Top20，用于报告和 QGIS 制图。
+3. 后续仍建议用 OSM 边界替换 `venues.geom_polygon` 的近似矩形，优先处理 De Schorre。
