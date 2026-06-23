@@ -189,6 +189,12 @@ async def main() -> int:
     parser.add_argument("--click-regex", default=DEFAULT_CLICK_RE.pattern)
     parser.add_argument("--headed", action="store_true")
     parser.add_argument("--keep-open", action="store_true")
+    parser.add_argument(
+        "--manual-wait-ms",
+        type=int,
+        default=0,
+        help="Keep the headed browser open for manual interaction for this many milliseconds before final capture.",
+    )
     parser.add_argument("--channel", help="Playwright browser channel, for example msedge or chrome.")
     parser.add_argument("--executable-path")
     args = parser.parse_args()
@@ -285,10 +291,23 @@ async def main() -> int:
         clicked.extend(await click_safe_targets(page, click_regex, args.max_clicks, args.interaction_wait_ms))
         await scroll_page(page, max(2, args.scroll_steps // 2), args.interaction_wait_ms)
         await save_page_state(page, processed_dir)
+        if args.manual_wait_ms > 0:
+            print(f"Manual interaction window: {args.manual_wait_ms} ms")
+            try:
+                await page.wait_for_timeout(args.manual_wait_ms)
+                await save_page_state(page, processed_dir)
+            except Exception as exc:  # noqa: BLE001 - closing the browser is a natural manual-stop signal.
+                print(f"Manual interaction ended before timeout: {exc}")
         if args.keep_open:
-            await asyncio.to_thread(input, "Browser is open. Interact manually, then press Enter here to finish capture...")
-            await save_page_state(page, processed_dir)
-        await browser.close()
+            try:
+                await asyncio.to_thread(input, "Browser is open. Interact manually, then press Enter here to finish capture...")
+                await save_page_state(page, processed_dir)
+            except Exception as exc:  # noqa: BLE001
+                print(f"Keep-open interaction ended before Enter: {exc}")
+        try:
+            await browser.close()
+        except Exception:
+            pass
 
     with (processed_dir / "deep_network_requests.csv").open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(

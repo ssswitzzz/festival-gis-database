@@ -37,6 +37,9 @@ data/raw/defqon_deep_capture_2025/
 data/processed/defqon_deep_capture_2025/
 data/raw/awakenings_deep_capture_2025/
 data/processed/awakenings_deep_capture_2025/
+data/raw/awakenings_deep_capture_2025_manual/
+data/processed/awakenings_deep_capture_2025_manual/
+data/raw/awakenings_wayback_shopapi_probe/
 
 # Database / GIS local project files
 *.dump
