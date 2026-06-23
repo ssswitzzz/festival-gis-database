@@ -25,6 +25,18 @@ data/processed/stg_*.clean.sql
 
 # Browser/network capture cache can be regenerated from documented sources
 data/raw/festival_network_capture/
+data/raw/passes_packages_capture/
+data/raw/passes_packages_capture_2025/
+data/processed/passes_packages_capture/
+data/processed/passes_packages_capture_2025/
+data/raw/defqon_capture_2025/
+data/processed/defqon_capture_2025/
+data/raw/awakenings_capture_2025/
+data/processed/awakenings_capture_2025/
+data/raw/defqon_deep_capture_2025/
+data/processed/defqon_deep_capture_2025/
+data/raw/awakenings_deep_capture_2025/
+data/processed/awakenings_deep_capture_2025/
 
 # Database / GIS local project files
 *.dump
