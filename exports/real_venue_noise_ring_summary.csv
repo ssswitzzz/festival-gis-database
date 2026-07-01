@@ -1,0 +1,10 @@
+venue_id,venue_name,city,country,radius_km,high_sensitive_facilities,schools,hospitals,raw_population,weighted_population,intersecting_protected_areas,airports,train_stations,bus_terminals
+3,Beekse Bergen,Hilvarenbeek,Netherlands,2,0,0,0,1149,92,0,0,0,1
+3,Beekse Bergen,Hilvarenbeek,Netherlands,5,31,31,0,91411,7313,2,0,0,0
+3,Beekse Bergen,Hilvarenbeek,Netherlands,10,75,73,2,221610,17729,6,0,3,2
+1,De Schorre,Boom,Belgium,2,17,17,0,25574,2046,0,0,1,1
+1,De Schorre,Boom,Belgium,5,35,33,2,89215,7137,0,0,3,2
+1,De Schorre,Boom,Belgium,10,114,110,4,341637,27331,4,0,10,0
+2,Walibi Holland event grounds,Biddinghuizen,Netherlands,2,0,0,0,392,31,1,0,2,0
+2,Walibi Holland event grounds,Biddinghuizen,Netherlands,5,3,3,0,14473,1158,1,0,0,0
+2,Walibi Holland event grounds,Biddinghuizen,Netherlands,10,12,12,0,74647,5972,2,0,2,0

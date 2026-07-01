@@ -1,0 +1,395 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{ctex}
+\usetikzlibrary{shapes.multipart, positioning, arrows.meta, shapes.geometric, fit, calc}
+
+\tikzset{
+    entity/.style={
+        draw,
+        rectangle split,
+        rectangle split parts=2,
+        rectangle split part align={center, left},
+        rounded corners=2pt,
+        fill=blue!5,
+        thick,
+        minimum width=4.0cm,
+        align=left,
+        font=\huge
+    },
+    spatial/.style={
+        draw,
+        rectangle split,
+        rectangle split parts=2,
+        rectangle split part align={center, left},
+        rounded corners=2pt,
+        fill=green!5,
+        thick,
+        minimum width=4.0cm,
+        align=left,
+        font=\huge
+    },
+    ergroup/.style={
+        draw,
+        rounded corners=4pt,
+        thick,
+        dashed,
+        inner sep=8pt
+    },
+    rel/.style={
+        draw,
+        -{Stealth[scale=0.75]},
+        thick
+    },
+    spatialrel/.style={
+        draw,
+        -{Stealth[scale=0.75]},
+        thick,
+        dashed
+    },
+    relation/.style={
+        draw,
+        diamond,
+        aspect=1.6,
+        fill=blue!5,
+        thick,
+        minimum width=1.8cm,
+        minimum height=1.0cm,
+        align=center,
+        font=\LARGE\bfseries,
+        inner sep=2pt
+    },
+    relation_spatial/.style={
+        draw,
+        diamond,
+        aspect=1.6,
+        fill=green!5,
+        thick,
+        dashed,
+        minimum width=1.8cm,
+        minimum height=1.0cm,
+        align=center,
+        font=\LARGE\bfseries,
+        inner sep=2pt
+    },
+    rel_line/.style={
+        draw,
+        thick
+    },
+    spatial_rel_line/.style={
+        draw,
+        thick,
+        dashed
+    }
+}
+
+\begin{document}
+\begin{tikzpicture}[>=latex, every node/.style={font=\huge}]
+
+% ================================================================
+% 第一行：organizers → festivals → festival_editions
+% ================================================================
+\node[entity] (org) at (0, 0) {
+    \textbf{organizers} 主办方
+    \nodepart{second}
+    \underline{organizer\_id} [PK] \\
+    name [UQ] \\
+    country \\
+    website
+};
+
+\node[entity] (fest) at (14.5, 0) {
+    \textbf{festivals} 音乐节品牌
+    \nodepart{second}
+    \underline{festival\_id} [PK] \\
+    organizer\_id [FK] \\
+    name [UQ] \\
+    founded\_year \\
+    home\_country
+};
+
+\node[entity] (ed) at (29.0, 0) {
+    \textbf{festival\_editions} 年度届次
+    \nodepart{second}
+    \underline{edition\_id} [PK] \\
+    festival\_id [FK] \\
+    venue\_id [FK] \\
+    year \\
+    start\_date/end\_date
+};
+
+% ================================================================
+% 第二行：venues, stages, ticket_types
+% ================================================================
+\node[entity] (ven) at (0, -12.0) {
+    \textbf{venues} 真实场地
+    \nodepart{second}
+    \underline{venue\_id} [PK] \\
+    name \\
+    city/country \\
+    area\_sqm \\
+    geom\_polygon \\
+    geom\_point
+};
+
+\node[entity] (stg) at (14.5, -12.0) {
+    \textbf{stages} 舞台
+    \nodepart{second}
+    \underline{stage\_id} [PK] \\
+    edition\_id [FK] \\
+    name [UQ] \\
+    capacity \\
+    geom\_point
+};
+
+\node[entity] (tkt) at (29.0, -12.0) {
+    \textbf{ticket\_types} 票种
+    \nodepart{second}
+    \underline{ticket\_type\_id} [PK] \\
+    edition\_id [FK] \\
+    name [UQ] \\
+    price\_eur \\
+    quota \\
+    is\_simulated
+};
+
+% ================================================================
+% 第三行：performances, performance_artists, ticket_price_offers
+% ================================================================
+\node[entity] (perf) at (0, -24.0) {
+    \textbf{performances} 节目块
+    \nodepart{second}
+    \underline{performance\_id} [PK] \\
+    stage\_id [FK] \\
+    official\_performance\_id \\
+    performance\_name \\
+    start\_time/end\_time
+};
+
+\node[entity] (pa) at (14.5, -24.0) {
+    \textbf{performance\_artists} 演出艺人
+    \nodepart{second}
+    \underline{performance\_id} [PK, FK] \\
+    \underline{artist\_id} [PK, FK] \\
+    artist\_order \\
+    role
+};
+
+\node[entity] (offer) at (29.0, -24.0) {
+    \textbf{ticket\_price\_offers} 票价报价
+    \nodepart{second}
+    \underline{offer\_id} [PK] \\
+    ticket\_type\_id [FK] \\
+    sale\_category \\
+    price\_eur/currency \\
+    source\_url \\
+    confidence
+};
+
+% ================================================================
+% 第四行：artists, artist_genres, genres
+% ================================================================
+\node[entity] (art) at (0, -36.0) {
+    \textbf{artists} 艺人
+    \nodepart{second}
+    \underline{artist\_id} [PK] \\
+    name [UQ] \\
+    country
+};
+
+\node[entity] (ag) at (14.5, -36.0) {
+    \textbf{artist\_genres} 艺人流派
+    \nodepart{second}
+    \underline{artist\_id} [PK, FK] \\
+    \underline{genre\_id} [PK, FK]
+};
+
+\node[entity] (gen) at (29.0, -36.0) {
+    \textbf{genres} 音乐流派
+    \nodepart{second}
+    \underline{genre\_id} [PK] \\
+    name [UQ]
+};
+
+% ================================================================
+% 业务关系层标签
+% ================================================================
+\node[draw=none, font=\huge\bfseries, fill=blue!5, rounded corners=2pt, inner sep=3pt] at (14.5, 4.0) {业务关系层};
+
+% ================================================================
+% 关系菱形 —— 第一行内部
+% ================================================================
+\node[relation] (r_org_fest) at ($(org)!0.5!(fest)$) {举办};
+\node[relation] (r_fest_ed) at ($(fest)!0.5!(ed)$) {拥有};
+
+% ================================================================
+% 关系菱形 —— 第一行 ↔ 第二行（垂直）
+% ================================================================
+\node[relation] (r_ed_stg) at ($(ed)!0.45!(stg) + (1.5, 0)$) {设立};
+\node[relation] (r_ven_ed) at ($(ven)!0.5!(ed)$) {承办};
+\node[relation] (r_ed_tkt) at ($(ed)!0.55!(tkt) + (-1.5, 0)$) {发售};
+
+% ================================================================
+% 关系菱形 —— 第二行 ↔ 第三行（垂直）
+% ================================================================
+\node[relation] (r_stg_perf) at ($(stg)!0.45!(perf) + (1.5, 0)$) {安排};
+\node[relation] (r_tkt_offer) at ($(tkt)!0.5!(offer)$) {报价};
+
+% ================================================================
+% 关系菱形 —— 第三行内部 & 第三行 ↔ 第四行
+% ================================================================
+\node[relation] (r_perf_pa) at ($(perf)!0.5!(pa)$) {包含};
+\node[relation] (r_art_pa) at ($(art)!0.5!(pa)$) {参与};
+\node[relation] (r_art_ag) at ($(art)!0.5!(ag)$) {具有};
+\node[relation] (r_gen_ag) at ($(gen)!0.5!(ag)$) {归属};
+
+% ================================================================
+% 连接线 —— 第一行
+% ================================================================
+\path[rel_line] (org) -- node[midway, above] {1} (r_org_fest);
+\path[rel_line] (r_org_fest) -- node[midway, above] {N} (fest);
+\path[rel_line] (fest) -- node[midway, above] {1} (r_fest_ed);
+\path[rel_line] (r_fest_ed) -- node[midway, above] {N} (ed);
+
+% ================================================================
+% 连接线 —— venues ↔ editions（斜向）
+% ================================================================
+\path[rel_line] (ven) -- node[pos=0.3, above left] {1} (r_ven_ed);
+\path[rel_line] (r_ven_ed) -- node[pos=0.7, above right] {N} (ed);
+
+% ================================================================
+% 连接线 —— editions → stages（向下偏右）
+% ================================================================
+\path[rel_line] (ed) -- node[pos=0.5, right] {1} (r_ed_stg);
+\path[rel_line] (r_ed_stg) -- node[pos=0.5, right] {N} (stg);
+
+% ================================================================
+% 连接线 —— editions → ticket_types（向下偏左）
+% ================================================================
+\path[rel_line] (ed) -- node[pos=0.5, left] {1} (r_ed_tkt);
+\path[rel_line] (r_ed_tkt) -- node[pos=0.3, left] {N} (tkt);
+
+% ================================================================
+% 连接线 —— stages → performances（向下偏右）
+% ================================================================
+\path[rel_line] (stg) -- node[pos=0.5, right] {1} (r_stg_perf);
+\path[rel_line] (r_stg_perf) -- node[pos=0.5, right] {N} (perf);
+
+% ================================================================
+% 连接线 —— ticket_types → offers
+% ================================================================
+\path[rel_line] (tkt) -- node[midway, right] {1} (r_tkt_offer);
+\path[rel_line] (r_tkt_offer) -- node[midway, right] {N} (offer);
+
+% ================================================================
+% 连接线 —— 第三行内部
+% ================================================================
+\path[rel_line] (perf) -- node[pos=0.6, above] {1} (r_perf_pa);
+\path[rel_line] (r_perf_pa) -- node[pos=0.3, above] {N} (pa);
+
+% ================================================================
+% 连接线 —— artists ↔ performance_artists, artist_genres
+% ================================================================
+\path[rel_line] (art) -- node[midway, right] {1} (r_art_pa);
+\path[rel_line] (r_art_pa) -- node[midway, right] {N} (pa);
+\path[rel_line] (art) -- node[midway, above] {1} (r_art_ag);
+\path[rel_line] (r_art_ag) -- node[midway, above] {N} (ag);
+
+% ================================================================
+% 连接线 —— genres ↔ artist_genres
+% ================================================================
+\path[rel_line] (gen) -- node[midway, above] {1} (r_gen_ag);
+\path[rel_line] (r_gen_ag) -- node[midway, above] {N} (ag);
+
+% ================================================================
+% ======== 空间分析层（右半侧）========
+% ================================================================
+
+% 候选场地 + 选址评分（纵向排布）
+\node[spatial] (cand) at (43.5, 0.0) {
+    \textbf{candidate\_sites} 候选场地
+    \nodepart{second}
+    \underline{site\_id} [PK] \\
+    source\_osm\_id \\
+    terrain\_type \\
+    area\_sqm \\
+    geom\_polygon
+};
+
+\node[spatial] (eval) at (43.5, -13.0) {
+    \textbf{site\_evaluations} 选址评分
+    \nodepart{second}
+    \underline{evaluation\_id} [PK] \\
+    site\_id [FK] \\
+    airport\_score \\
+    population\_score \\
+    ecology\_safety\_score \\
+    noise\_safety\_score \\
+    total\_score
+};
+
+\node[relation] (r_cand_eval) at ($(cand)!0.5!(eval)$) {评估};
+\path[rel_line] (cand) -- node[midway, right] {1} (r_cand_eval);
+\path[rel_line] (r_cand_eval) -- node[midway, right] {N} (eval);
+
+% 空间分析数据图层（折线排布：右边放两个 hub & pop，下边放两个较长的 eco & noise）
+\node[spatial] (hub) at (43.5, -23.0) {
+    \textbf{transport\_hubs} 交通枢纽
+    \nodepart{second}
+    \underline{hub\_id} [PK] \\
+    hub\_type \\
+    daily\_capacity \\
+    geom\_point
+};
+
+\node[spatial] (pop) at (43.5, -34.0) {
+    \textbf{population\_grids} 人口网格
+    \nodepart{second}
+    \underline{grid\_id} [PK] \\
+    population \\
+    edm\_fan\_index \\
+    geom\_polygon
+};
+
+\node[spatial] (eco) at (29.0, -46.0) {
+    \textbf{ecological\_protected\_areas} 生态保护区
+    \nodepart{second}
+    \underline{reserve\_id} [PK] \\
+    protect\_type \\
+    geom\_polygon
+};
+
+\node[spatial] (noise) at (43.5, -46.0) {
+    \textbf{noise\_sensitive\_facilities} 噪声敏感设施
+    \nodepart{second}
+    \underline{facility\_id} [PK] \\
+    facility\_type \\
+    sensitivity\_level \\
+    geom\_point
+};
+
+% ================================================================
+% 空间层边界框
+% ================================================================
+% 空间分析与选址评分层
+\draw[draw=gray, dashed, thick, rounded corners=4pt] (35.5, 3.0) rectangle (48.5, -17.5);
+\node[draw=none, font=\Large\bfseries, fill=white, inner sep=2pt] at (43.5, 3.0) {空间分析与选址评分层};
+
+% 空间分析数据图层（折线型边界框，包围 hub, eco, noise, pop）
+\draw[draw=gray, dashed, thick, rounded corners=4pt] 
+    (36.5, -19.5) -- (48.5, -19.5) -- (48.5, -50.0) -- (23.5, -50.0) -- (23.5, -41.0) -- (36.5, -41.0) -- (36.5, -19.5);
+\node[draw=none, font=\Large\bfseries, fill=white, inner sep=2pt] at (43.5, -19.5) {空间分析数据图层};
+
+
+% ================================================================
+% 图例
+% ================================================================
+\node[draw, rounded corners=2pt, fill=gray!5, align=left, font=\normalsize, anchor=north west] at (23.5, -51.0) {
+    图例：实线为主外键约束关系。\\
+    \texttt{performance\_artists} 和 \texttt{artist\_genres} 解决多对多关系；\\
+    \texttt{ticket\_price\_offers} 保存同一票种在不同销售阶段的官方报价。\\
+    注：右侧"空间分析数据图层"在 GIS 查询中通过 PostGIS 空间函数\\
+    （如 \texttt{ST\_Distance}、\texttt{ST\_Intersection} 等）\\
+    与 \texttt{candidate\_sites} 进行动态计算，故不设物理外键线。
+};
+\end{tikzpicture}%
+\end{document}

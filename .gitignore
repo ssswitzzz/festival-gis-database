@@ -8,6 +8,24 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 
+# Codex/local agent scratch space
+.agents/
+.codex/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.synctex*
+*.fls
+*.fdb_latexmk
+*.xdv
+latex_fonts/
+
 # Local environment and credentials
 .env
 .env.*

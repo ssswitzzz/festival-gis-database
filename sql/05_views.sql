@@ -308,7 +308,11 @@ SELECT
     m.high_sensitive_count_5km,
     ev.method_note,
     m.data_source,
-    m.geom_polygon
+    m.geom_polygon,
+    CASE
+        WHEN m.name = 'Provinciaal Domein De Schorre' THEN 'De Schorre'
+        ELSE m.name
+    END AS display_name
 FROM metrics m
 JOIN site_evaluations ev
   ON ev.site_id = m.site_id;

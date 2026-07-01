@@ -3,6 +3,7 @@
 -- Spatial reference: EPSG:3035 (ETRS89-extended / LAEA Europe), meters.
 
 CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 DROP TABLE IF EXISTS site_evaluations CASCADE;
 DROP TABLE IF EXISTS noise_sensitive_facilities CASCADE;
@@ -218,7 +219,10 @@ CREATE INDEX idx_editions_festival_id ON festival_editions(festival_id);
 CREATE INDEX idx_editions_venue_id ON festival_editions(venue_id);
 CREATE INDEX idx_stages_edition_id ON stages(edition_id);
 CREATE INDEX idx_performances_stage_id ON performances(stage_id);
+CREATE INDEX idx_performances_start_time ON performances(start_time);
+CREATE INDEX idx_performances_business_day ON performances(((start_time - interval '5 hours')::date));
 CREATE INDEX idx_performance_artists_artist_id ON performance_artists(artist_id);
+CREATE INDEX idx_genres_name_trgm ON genres USING gin (name gin_trgm_ops);
 CREATE INDEX idx_ticket_types_edition_id ON ticket_types(edition_id);
 CREATE INDEX idx_ticket_price_offers_ticket_type_id ON ticket_price_offers(ticket_type_id);
 CREATE INDEX idx_ticket_price_offers_sale_category ON ticket_price_offers(sale_category);

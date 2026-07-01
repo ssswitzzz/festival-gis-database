@@ -1,0 +1,19 @@
+site_role,venue_id,venue_name,site_id,site_name,total_score,radius_km,high_sensitive_facilities,schools,hospitals,raw_population,weighted_population,intersecting_protected_areas
+real_venue,3,Beekse Bergen,,Beekse Bergen,,2,5,5,0,44967,3597,2
+real_venue,3,Beekse Bergen,,Beekse Bergen,,5,67,67,0,180161,14413,3
+real_venue,3,Beekse Bergen,,Beekse Bergen,,10,42,40,2,182326,14586,6
+top_non_real_candidate,3,Beekse Bergen,15,De Gerrithoeve,47.09,2,0,0,0,955,76,2
+top_non_real_candidate,3,Beekse Bergen,15,De Gerrithoeve,47.09,5,10,10,0,20845,1668,2
+top_non_real_candidate,3,Beekse Bergen,15,De Gerrithoeve,47.09,10,34,34,0,155566,12445,4
+real_venue,1,De Schorre,,De Schorre,,2,23,22,1,41024,3282,0
+real_venue,1,De Schorre,,De Schorre,,5,38,37,1,93418,7473,0
+real_venue,1,De Schorre,,De Schorre,,10,107,103,4,397813,31825,4
+top_non_real_candidate,1,De Schorre,14,Tivolipark,51.72,2,25,23,2,51119,4090,1
+top_non_real_candidate,1,De Schorre,14,Tivolipark,51.72,5,9,9,0,104866,8389,2
+top_non_real_candidate,1,De Schorre,14,Tivolipark,51.72,10,60,57,3,207602,16608,4
+real_venue,2,Walibi Holland event grounds,,Walibi Holland event grounds,,2,0,0,0,485,39,1
+real_venue,2,Walibi Holland event grounds,,Walibi Holland event grounds,,5,11,11,0,25027,2002,1
+real_venue,2,Walibi Holland event grounds,,Walibi Holland event grounds,,10,4,4,0,74189,5935,2
+top_non_real_candidate,2,Walibi Holland event grounds,23,Molecaten Parc Flevostrand,54.14,2,0,0,0,270,22,1
+top_non_real_candidate,2,Walibi Holland event grounds,23,Molecaten Parc Flevostrand,54.14,5,0,0,0,36224,2898,2
+top_non_real_candidate,2,Walibi Holland event grounds,23,Molecaten Parc Flevostrand,54.14,10,4,4,0,92946,7436,2
