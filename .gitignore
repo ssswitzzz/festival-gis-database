@@ -64,3 +64,7 @@ data/raw/awakenings_wayback_shopapi_probe/
 *.backup
 *.qgz
 *.qgs
+
+# Final report local deliverables
+final_database_project_report.tex
+final_database_project_report.pdf
